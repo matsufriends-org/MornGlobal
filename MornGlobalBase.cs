@@ -34,7 +34,7 @@ namespace MornGlobal
 
         protected abstract bool ShowLog { get; }
         protected abstract string ModuleName { get; }
-        protected abstract Color ModuleColor { get; }
+        protected virtual Color ModuleColor => Color.green;
         private string Prefix => $"[<color=#{ColorUtility.ToHtmlStringRGB(ModuleColor)}>{ModuleName}</color>] ";
 
         public void Log(string message)
