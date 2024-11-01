@@ -1,5 +1,6 @@
-using UnityEditor;
+#if UNITY_EDITOR
 using UnityEngine;
+using UnityEditor;
 
 namespace MornGlobal
 {
@@ -20,3 +21,4 @@ namespace MornGlobal
         }
     }
 }
+#endif
