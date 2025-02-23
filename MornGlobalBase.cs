@@ -1,6 +1,9 @@
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace MornGlobal
 {
@@ -11,7 +14,7 @@ namespace MornGlobal
         private void OnEnable()
         {
             I = (T)this;
-            Log("Global Settings Loaded");
+            LogInternal("Global Settings Loaded");
 #if UNITY_EDITOR
             var preloadedAssets = PlayerSettings.GetPreloadedAssets().ToList();
             if (preloadedAssets.Contains(I) && preloadedAssets.Count(x => x is T) == 1)
@@ -22,22 +25,25 @@ namespace MornGlobal
             preloadedAssets.RemoveAll(x => x is T);
             preloadedAssets.Add(I);
             PlayerSettings.SetPreloadedAssets(preloadedAssets.ToArray());
-            Log("Global Settings Added to Preloaded Assets!");
+            LogInternal("Global Settings Added to Preloaded Assets!");
 #endif
         }
 
         private void OnDisable()
         {
             I = null;
-            Log("Global Settings Unloaded");
+            LogInternal("Global Settings Unloaded");
         }
-
-        protected abstract bool ShowLog { get; }
+#if UNITY_EDITOR
+        protected virtual bool ShowLog => EditorPrefs.GetBool($"{ModuleName}_ShowLog", true);
+#else
+        protected virtual bool ShowLog { get; }
+#endif
         protected abstract string ModuleName { get; }
         protected virtual Color ModuleColor => Color.green;
-        private string Prefix => $"[<color=#{ColorUtility.ToHtmlStringRGB(ModuleColor)}>{ModuleName}</color>] ";
-
-        public void Log(string message)
+        protected virtual string Prefix => $"[<color=#{ColorUtility.ToHtmlStringRGB(ModuleColor)}>{ModuleName}</color>] ";
+        
+        protected void LogInternal(string message)
         {
             if (ShowLog)
             {
@@ -45,7 +51,7 @@ namespace MornGlobal
             }
         }
 
-        public void LogError(string message)
+        protected void LogErrorInternal(string message)
         {
             if (ShowLog)
             {
@@ -53,7 +59,7 @@ namespace MornGlobal
             }
         }
 
-        public void LogWarning(string message)
+        protected void LogWarningInternal(string message)
         {
             if (ShowLog)
             {
