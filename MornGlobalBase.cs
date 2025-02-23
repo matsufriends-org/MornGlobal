@@ -36,8 +36,12 @@ namespace MornGlobal
         }
 #if UNITY_EDITOR
         protected virtual bool ShowLog => EditorPrefs.GetBool($"{ModuleName}_ShowLog", true);
+        protected virtual bool ShowLogWarning => EditorPrefs.GetBool($"{ModuleName}_ShowLogWarning", true);
+        protected virtual bool ShowLogError => EditorPrefs.GetBool($"{ModuleName}_ShowLogError", true);
 #else
         protected virtual bool ShowLog { get; }
+        protected virtual bool ShowLogWarning { get; }
+        protected virtual bool ShowLogError { get; }
 #endif
         protected abstract string ModuleName { get; }
         protected virtual Color ModuleColor => Color.green;
@@ -53,7 +57,7 @@ namespace MornGlobal
 
         protected void LogErrorInternal(string message)
         {
-            if (ShowLog)
+            if (ShowLogWarning)
             {
                 Debug.LogError($"{Prefix} {message}");
             }
@@ -61,7 +65,7 @@ namespace MornGlobal
 
         protected void LogWarningInternal(string message)
         {
-            if (ShowLog)
+            if (ShowLogError)
             {
                 Debug.LogWarning($"{Prefix} {message}");
             }
