@@ -39,9 +39,9 @@ namespace MornGlobal
         protected virtual bool ShowLogWarning => EditorPrefs.GetBool($"{ModuleName}_ShowLogWarning", true);
         protected virtual bool ShowLogError => EditorPrefs.GetBool($"{ModuleName}_ShowLogError", true);
 #else
-        protected virtual bool ShowLog { get; }
-        protected virtual bool ShowLogWarning { get; }
-        protected virtual bool ShowLogError { get; }
+        protected virtual bool ShowLog => Debug.isDebugBuild;
+        protected virtual bool ShowLogWarning => Debug.isDebugBuild;
+        protected virtual bool ShowLogError => Debug.isDebugBuild;
 #endif
         protected abstract string ModuleName { get; }
         protected virtual Color ModuleColor => Color.green;
