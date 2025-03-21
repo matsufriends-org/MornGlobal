@@ -5,9 +5,9 @@ using UnityEditor;
 namespace MornGlobal
 {
     [InitializeOnLoad]
-    public static class MornGlobalPreload
+    public static class MornGlobalPreloader
     {
-        static MornGlobalPreload()
+        static MornGlobalPreloader()
         {
             var assets = PlayerSettings.GetPreloadedAssets();
             foreach (var asset in assets)
