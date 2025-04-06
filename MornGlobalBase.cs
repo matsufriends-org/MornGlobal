@@ -8,7 +8,33 @@ namespace MornGlobal
 {
     public abstract class MornGlobalBase<T> : ScriptableObject, IMornGlobal where T : MornGlobalBase<T>
     {
-        public static T I { get; private set; }
+        private static T _instance;
+        public static T I
+        {
+            get
+            {
+#if UNITY_EDITOR
+                if (_instance == null)
+                {
+                    var path = EditorUtility.SaveFilePanelInProject(
+                        $"Save {typeof(T).Name}",
+                        $"{typeof(T).Name}",
+                        "asset",
+                        string.Empty);
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        var newSettings = CreateInstance<T>();
+                        AssetDatabase.CreateAsset(newSettings, path);
+                        var preloadedAssets = PlayerSettings.GetPreloadedAssets().ToList();
+                        preloadedAssets.RemoveAll(x => x is T);
+                        preloadedAssets.Add(newSettings);
+                        PlayerSettings.SetPreloadedAssets(preloadedAssets.ToArray());
+                    }
+                }
+#endif
+                return _instance;
+            }
+        }
         private MornGlobalHelper _helper;
         private MornGlobalHelper Helper => _helper ??= new MornGlobalHelper(this);
         string IMornGlobal.ModuleName => ModuleName;
@@ -20,7 +46,7 @@ namespace MornGlobal
 
         private void OnEnable()
         {
-            I = (T)this;
+            _instance = (T)this;
             LogInternal($"{ModuleName}/{typeof(T).Name}を読み込みました。");
 #if UNITY_EDITOR
             var preloadedAssets = PlayerSettings.GetPreloadedAssets().ToList();
@@ -38,7 +64,7 @@ namespace MornGlobal
 
         private void OnDisable()
         {
-            I = null;
+            _instance = null;
             LogInternal($"{ModuleName}/{typeof(T).Name}をアンロードしました。");
         }
 
