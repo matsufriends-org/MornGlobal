@@ -84,10 +84,10 @@ namespace MornGlobal
             Helper.LogWarningInternal(message);
         }
 
-        protected void SetDirtyInternal()
+        protected void SetDirtyInternal(Object target)
         {
 #if UNITY_EDITOR
-            EditorUtility.SetDirty(this);
+            EditorUtility.SetDirty(target);
 #endif
         }
     }
