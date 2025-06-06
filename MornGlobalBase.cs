@@ -83,5 +83,12 @@ namespace MornGlobal
         {
             Helper.LogWarningInternal(message);
         }
+
+        protected void SetDirtyInternal()
+        {
+#if UNITY_EDITOR
+            EditorUtility.SetDirty(this);
+#endif
+        }
     }
 }
