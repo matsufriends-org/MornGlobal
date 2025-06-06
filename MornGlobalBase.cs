@@ -30,7 +30,10 @@ namespace MornGlobal
                         preloadedAssets.Add(newSettings);
                         PlayerSettings.SetPreloadedAssets(preloadedAssets.ToArray());
                     }
-                    _instance = AssetDatabase.LoadAssetAtPath<T>(path);
+                    _instance = AssetDatabase.FindAssets($"t:{typeof(T).Name}")
+                        .Select(AssetDatabase.GUIDToAssetPath)
+                        .Select(AssetDatabase.LoadAssetAtPath<T>)
+                        .FirstOrDefault();
                 }
 #endif
                 return _instance;
